@@ -103,7 +103,6 @@ https://github.com/user-attachments/assets/2cbb0026-951c-4ec8-ae3e-0eb79eea85a0
 **Link to Storymaker**: https://huggingface.co/spaces/rishivijayvargiya/id2223-lab2-storymaker
 
 ## Model-Centric Approaches for Fine-Tuning Improvements
-**TODO: Talk about some hyperparameters and show results for a couple (graphs for 5 epochs on 1/10th the dataset). Can also talk about "early stopping" to save resources, using a validation/evaluation set in addition to a training set, etc.**
 When thinking about some **mode-centric** approaches of improving the performance of the performance of our model, we thought primarily of **changing the hyper-parameters of our model** to obtain **lower training losses**. As a recap, the hyperparameters for the `SFTTrainer` with which we fine-tuned our model were as follows:
 
 ```python3
@@ -147,7 +146,7 @@ With this in mind, in the interest of time, our attention was drawn towards the 
 ### Impact of `num_train_epochs`
 The more time that our model sees a specific training example, the morel likely it is that the model performs better (ie, has lower training loss) on that example. This was also evident in our observations, as can be seen from the graph below: the training loss seems to generally **decrease** as the number of **epochs** increase. Thus, one easy way to improve model performance would be to **increase the number of epochs**.
 
-![epoch_impact](https://github.com/rishivijayv/id2223-lab2/tree/main/assets/epoch_impact.png)
+![epoch_impact](https://github.com/rishivijayv/id2223-lab2/blob/main/assets/epoch_impact.png)
 
 However, there is a fine-line when it comes to simply increasing the number of epochs. If the model continues seeing the same examples over and over again (eg: 20 or 30 epochs, for instance), then it is very likely that the model has weights that **overfit** the training data. Such behvaious can be prevented by introducing a set of examples that form the **validation set**. Then, at the end of each epoch, we can compute the **validation loss** of our model against the examples in the validation set. If the **validation loss** does not seem to improve over multiple epochs, or if it starts to _increase_ in consecutive epochs, then we can use **early stopping** to stop the training and prevent the model from overfitting on the training data. Such an addition can also **save resources**, as model training/fine-tuning is a time-intensive process, so it would be beneficial for everyone if it can be cut short and have better performance on data it has not seen. 
 
@@ -155,14 +154,14 @@ However, there is a fine-line when it comes to simply increasing the number of e
 ### Impact of `learning_rate`
 Learning Rate controls the **magnitude** of the adjustments made to the model's weight. A **higher learning rate** has the advantage of _pulling_ the model's weights out of local minima, but have the disadvantage of _overshooting_ (ie, adjusting weights too drastically) and missing the optimal minimum. A **lower learning rate** has the oppoiste advantage and disadvantage. We wanted to determine the impact of halving/doubling the learning rate on the average loss per epoch (again, on 1k examples). So, **keeping the other hyperparameters the same**, we halved the learning rate (`1e-4` from `2e-4`) and fine-tuned our model, doubled the learning rate (`4e-4` from `2e-4`) and fine-tuned our model, and then plotted the average training loss with the 3 learning rates (the 2 described above, and the default: `2e-4`), and observed the following
 
-![learning_rate_impact](https://github.com/rishivijayv/id2223-lab2/tree/main/assets/learning_rate_impact.png)
+![learning_rate_impact](https://github.com/rishivijayv/id2223-lab2/blob/main/assets/learning_rate_impact.png)
 
 From this, it is evident that the model seems to start with a similar training loss initially, but a higher learning rate seems to force the model _out_ of local minimums, as the training loss per epoch (after the first epoch) **decreases** as the learning rate **increases**. Thus, from this, we can see that another way to improve the model performance (ie, reduce training loss), could be to **increase the learning rate**.
 
 ### Impact of `lr_scheduler_type`
 As the training progresses, we might want to reduce the magnitude of the weight adjustments made, as it is likely that the model's weights now need _minute refinements_ instead of _major adjustments_. This is the motivation behind the `lr_scheduler_type` hyperparameter: which is responsible for adjusting (in most cases, **decreasing**) the learning rate as the training progresses. The default `lr_scheduler` was `linear`: which, as the name suggests, means that the learning rate decreases in a linear fashion. We wanted to try out one other value for the `lr_scheduler`, which was `cosine`: meaning that the adjustments makes the learning rate follow a `cosine` curve, which is more smoother and could allow for better convergence. We observed the following results (note: we kept all other hyperparameters the same)
 
-![lr_scheduler_impact](https://github.com/rishivijayv/id2223-lab2/tree/main/assets/lr_scheduler_impact.png)
+![lr_scheduler_impact](https://github.com/rishivijayv/id2223-lab2/blob/main/assets/lr_scheduler_impact.png)
 
 Although there seems to be a _slight_ improvement in the training loss as the epochs increaqse, the loss at the final epoch seems to be identical for both the `lr_scheduler_types`. So, given this information, when making adjustments to the fine-tuning of the entire 100k dataset, we believe that even though this switch could be made since it does not seem to make the model perform _worse_,  we might not prioritize going for the `cosine` scheduler. This is because we feel it would also be a little more computationally expensive to compute `cosine` terms as opposed to `linear` terms, and so the model might **scale poorly**, and the training loss benefits might not be worth this cost. If given the time, we could try some other schedulers, howver, such as `constant` or `constant_with_warmup`, etc. 
 
@@ -170,7 +169,7 @@ Although there seems to be a _slight_ improvement in the training loss as the ep
 ### Impact of `weight_decay`
 This determines how _much_ we decide to penalize larger weights during training: since large weights would make the model too complex and thus likely to overfit on the training data. The "default" value for this was 0.01. So, we deicded to test how the average training loss per epoch would change if, keeping all other hyperparameters the same, we **douobled** the `weight_decay` (to 0.02), or if we **halved** the `weight_decay` (to 0.005). We observed the following results
 
-![weight_decay_impact](https://github.com/rishivijayv/id2223-lab2/tree/main/assets/weight_decay_impact.png)
+![weight_decay_impact](https://github.com/rishivijayv/id2223-lab2/blob/main/assets/weight_decay_impact.png)
 
 There are 3 lines in the graph: but the lines for `weight_decay=0.01` and `weight_decay=0.02` seem to overlap too well. So, we feel there is **no significant impact** on the training loss for the 1k examples data set if we increase the weight decay. However, the training losses seem to generally be **lower** with a lower weight_decay, but not by much. So, it could be worth a try to **decrease** `weight_decay` in order to **decrease** training loss when using the 100k example data set. This might be a better balance between penalizing complex weights (to prevent overfitting) yet still allowing the model to learn some complex patterns from the training data. 
 
@@ -180,7 +179,7 @@ We would like to mention that in addition to decreasing the weight decay, we sho
 ### Impact of `per_device_train_batch_size`
 This controls the effective **batch size** used during training, meaning how many examples will be processed by the model at once. The default batch size of 2 per device gave us an effective batch size of 8, and thus gave us 1000/8 = 125 steps to process all examples once (ie, 125 steps per epoch). We decided to monitor what would happen if we double the batch size from 2 to 4 per device, which would give us an effective batch size of 16, and thus 1000/16 ~ approx 62 steps per epoch. Below are our results
 
-![batch_size_impact](https://github.com/rishivijayv/id2223-lab2/tree/main/assets/batch_size_impact.png)
+![batch_size_impact](https://github.com/rishivijayv/id2223-lab2/blob/main/assets/batch_size_impact.png)
 
 Doubling the batch size seems to be **worse** when it comes to training loss per epoch. So, if we were to choose which hyperparameters to tune for the 100k model, we would probably **not** want to change the per-device-batch-size first, and experiment tuning some of the other hyperparameters we have mentioned above. 
 
