@@ -12,7 +12,7 @@ Both these inference programs run on the **T4 GPU**. We tried to run them initia
 ## Contents of Repository
 This repository contains the following items:
 1. **This `README.md`**: Describes our Lab
-2. **The `Lab2_ID2223_GPU_Training_Unsloth.ipynb` Notebook**: Is the program we used to fine-tune our model. Is slightly modified for adding support for checkpointing weights and hyperparameter tuning tests (more on these later).
+2. **The `Lab2_ID2223_GPU_Training_Unsloth.ipynb` Notebook**: Is the program we used to fine-tune our model. Is slightly modified from the notebook provided in the lab handout for adding support for checkpointing weights and hyperparameter tuning tests (more on these later).
 3. **The `shallow-learning-chatbot` Directory**: Just contains a `README.md` with a link to the repository on HF Spaces which contains the code for this inference program.
 4. **The `shallow-storymaker` Directory**: Similar to (3), but the `README.md` has a link to the git repo on HF Spaces with code for the story-maker program instead.
 5. **The `assets` Directory**: Contains some static assets used in this `README.md` file. 
