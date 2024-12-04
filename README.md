@@ -191,7 +191,49 @@ Above, we have mentioned one way in which one could go about improving the model
 2. **Changing the _Model Architecture_ and Defintion of _Better Model_**: As we explaied earlier, our experiments above worked under the assumption that a "better model" is one which has a lower training loss per epoch. However, it could very well be the case that we are more concerned about the model generalizing well as opposed to learning patterns in the trianing data, for example. In this case, for instance, we should consider changing the **fine-tuning model architecture** we have and add a **validation set** which validates the performance of our model against a set of examples (not used in the training set) after each epoch. Using concepts such as **early stopping** could also help us save time and prevent overfitting. For example, we could use the `evaluation_strategy`, `eval_dataset` argument to specify this for `SFTTrainer`. 
 
 ## Data-Centric Approaches for Fine-Tuning Improvements
-**TODO: Just talk about data-centric approaches for improvement**
+The 2 data sources that were relevant for the main fine-tuning we performed (_not_ the hyperparamter tuning) were:
+
+1. The 4-bit quantized Llama-3.2-1B model (**The Base Model**)
+2. The FineTome-100k dataset (**The Dataset**)
+
+So, improving the model performance from a **data-centric** point of view would come down to updating one or both of these data sources to obtain a better performance. 
+
+For this category of model performance improvements, while we weren't able to get some _approximate_ impacts of using different data sources (unlike the case with the model-centric approach, where we tried different hyperparameters on a reduced dataset), we have some ideas on what could be done to improve the performance of our model, which we briefly discuss below. 
+
+In both the suggestions, we assume that by "improving model performance", we mean that we want the _final_ LLM model to produce outputs that are more in line with what a user expects (in terms of correctness, accuracy, etc). So, we are _not_ considering aspects such as the _time_ taken to perform the fine-tuning here. Note that this is different than the "better performance" criteria we used for the majority of the **model-centric approaches** above, where we considered training loss. 
+
+### Changing The Base Model
+There are 2 primary ways in which we think we could change the the **Base Model** in order for the final LLM model to give better generations.
+
+1. **Using a Model With More Parameters**: The Llama-3.2-1B model which was used as the base model as 1 billion parameters. A model with more number of parameters, such as the Llama-3.2-3B, the Llama-3.1-8B, etc could leave to **better model performance** when it comes to inference tasks. This is because models with higher number of parameters are more likely to have **learnt more complex patterns** (because of more capacity to represent these complex patterns), and are thus more likely to perform better on complex tasks requested by the user. This in turn means that the model will also be better at handling anomalies and ambiguitis in data provided at the time of inference.
+
+2. **Using a Non-Quantized Version of the Model**: We used the 4-bit quantized version of our model, which means that the weights used during fine-tuning would have been less precise, and thus the accuracy would have gone down (even though it could result in speed-up of the fine-tuning process). So, in order to increase _model accuracy_ of the final fine-tuned LLM (which is what we're aiming for), we could consider using **non-quantized versions of the base model** that we decide to use. The obvious downside of this would be an increase in training time, so that is something we would need to consider.
+
+
+### Changing The Dataset
+As mentioned earlier, The FineTome-100k dataset that was a subset of [The Tome](https://huggingface.co/datasets/arcee-ai/The-Tome), which had a "focus on instruction following" (according to its README). So, in order to improve the performance of our final LLM model when it comes to being more accurate in performing its tasks, we could consider the following 2 methods:
+
+1. **Using the Entire _The Tome_ Dataset**: The most obvious way to make the fine-tuned model perform better at its task would be to use the _entire_ dataset that FineTome-100k is based on. This would increase the number of examples that are available to the base model during training, and thus is more likely to improve the performance accuracy of the final fine-tuned LLM. Again, this would likely lead to a non-trivial increase in the training time of the model.
+
+2. **Using Different Data Sources**: Another way to improve the model performance would be to use _different_ datasets that also have a focus on making an LLM become better at instruction following. Some examples of these models could be: [LaMini-instruction](https://huggingface.co/datasets/MBZUAI/LaMini-instruction), [FLAN](https://github.com/google-research/FLAN), (OpenOcra)[https://huggingface.co/datasets/Open-Orca/OpenOrca], or (OpenHermes)[https://huggingface.co/datasets/teknium/openhermes] (which were mentioned in (here)[https://wandb.ai/capecape/alpaca_ft/reports/How-to-Fine-Tune-an-LLM-Part-1-Preparing-a-Dataset-for-Instruction-Tuning--Vmlldzo1NTcxNzE2] or (here)[https://huggingface.co/collections/davanstrien/top-10-instruction-tuning-datasets-copy-655240a94d81886e22cd9b0f], for instance). We could then compare how well the fine-tuned model performs after the fine-tuning based on our needs and choose the best fine-tuned model from among them. 
+
+### Some Thoughts & Notes
+We would like to briefly mention the downside of the approaches mentioned above: the time. Fine-Tuning LLMs is a resource and time intensive process, so finindg a dataset model that performs the best while being cognizant of the reousrces being used is a tricky balance. The best way to approach this would likely be to rely on popular datasets and base-models used for our specific use-case (in this case: instruction following), and chose those. We did not spend too much time to get approximate results in this case (as we did in the model-entric example) in the interest of time. The requirement was to mention some ways in which the performance could be improved, and so we feel we have done that by mentioning some new datasets/base-models here.
 
 ## Future Work
-**TODO: Talk a little about what more could have been done if time was not a constraint (eg: trying out different base models, changing even more hyperparameters, getting infrerence to work on CPUs using GGUF by trying out a workaround suggested in the discussion post, etc)**
+We feel we have covered most of the future work we would like to do in the text itself. This Lab made us realize that fine-tuning models has a very slow iteration cycle, so there are quite a few things we would have liked to do if we had more time. Some of these things that we would like to explore in the future without the constraints of time are:
+
+### Implementing the Different Model-Centric Approaches For Improvement
+These were briefly mentioned in the _Model-Centric Approaches for Fine-Tuning Improvements_ section. 
+
+### Updating Multiple Hyperparameters at Once 
+In the _Model-Centric Approaches_ section, we only discussed what would happen if the hyperparameters were changed in _isolation_. However, we would like to determine the ipact of changing multiple hyperparameters at once. For instance, `learning_rate` and `lr_scheduler_type` seem to be related, so we could investiagte what would happen if we changed both these hyperparaters at once.
+
+### Updating `unsloth/LoRA` Specific Hyperparameters 
+In the _Model-Centric Approaches_ section, we wonly talked about the hyperparameters that were passed as arguments to the `SFTTrainer` of `HugggingFace`. Howevber, we would also like to investigate the impact of chaning some LoRA specific hyperparameters, such as `lora_alpha` or `lora_dropout`, that are used by `unsloth`. 
+
+### Implementing the Different Data-Centric Approaches For Improvements
+This would involve us actualy trying out some of the different base-models and data-sets that we suggested in the section above (which we were not able to do because of time constraints)
+
+### Inference on CPUs
+We are running inference on GPUs. However, there seems to be a workaround to get the model in GGUF format (despite an issue with the `unsloth` library that we faced while exporting the fine-tuned model to GGUF files) which would allow us to run inference on CPUs. We would like to try this method out so that we can become aware of some of the challenges of running LLM inference on CPUs (main one being the slower inference speed) and how one can overcome said challenges (in this case: by pruning some weights of the model, for example), and the possible downsides of the methods that make inference on CPUs faster (in this case: the reduced accuracy of the model). 
