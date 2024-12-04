@@ -87,6 +87,11 @@ Below is a **short video demo** of an interaction with the chatbot:
 
 https://github.com/user-attachments/assets/e4692858-96c3-4bc0-b24c-c8e04e9f6b7a
 
+_Note: We ran in to some `unsloth` dependency issues a short while before we intended to submit (but after this demo was recorded). Ultimately, we did fix the issue, but unfortuantely the UI doesn't look **as** nice anymore. This appears to be a gradio issue, so perhaps playing around with the gradio version might help us resolve this. The chatbot still seems to work, and we thought the UI wouldn't be as big an aspect when it comes to grading, so we deicded to not interfere with the code close to the deadline. The UI would look like this at the moment_
+
+https://github.com/user-attachments/assets/c604dba4-b666-4483-b067-ad36cd7aa9b7
+
+
 **The Code**: https://huggingface.co/spaces/rishivijayvargiya/id2223-lab2-inference/tree/main
 
 **Link to Chatbot**: https://huggingface.co/spaces/rishivijayvargiya/id2223-lab2-inference
@@ -97,6 +102,12 @@ This is a slightly more sophisticated UI, with a theme([YTheme/Minecraft](https:
 Below is a **short video demo** of an adventure created by the storymaker: 
 
 https://github.com/user-attachments/assets/2cbb0026-951c-4ec8-ae3e-0eb79eea85a0
+
+_Note: See note above about the UI, and unfortunately the cool theme in the video above is not visible anymore. We also slightly changed the **system prompt** after the video above was recorded, but we don't feel that has any significant impact on the outcome._
+
+
+https://github.com/user-attachments/assets/1872999d-bb32-4f20-a0f6-e13c1df84ff2
+
 
 **The Code**: https://huggingface.co/spaces/rishivijayvargiya/id2223-lab2-storymaker/tree/main
 
