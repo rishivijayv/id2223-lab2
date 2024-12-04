@@ -84,7 +84,8 @@ Both these UIs take heavy inspiration from a demo Gradio app found in the `unslo
 This is a chatbot with a simple, interactive UI which allows users to send messages to the fine-tuned LLM and receive responses in return. After playing around with this chatbot a little, we believe that the chatbot seems to be primarily focused with trying to answer user questions. This, we think, makes sense: since the [FineTome-100k](https://huggingface.co/datasets/mlabonne/FineTome-100k) data-set was obtained from a larger data set, [The Tome](https://huggingface.co/datasets/arcee-ai/The-Tome), which had a "focus on instruction following" (according to its README). 
 
 Below is a **short video demo** of an interaction with the chatbot:
-**TODO: ADD VIDEO**
+
+https://github.com/user-attachments/assets/e4692858-96c3-4bc0-b24c-c8e04e9f6b7a
 
 **The Code**: https://huggingface.co/spaces/rishivijayvargiya/id2223-lab2-inference/tree/main
 
@@ -94,7 +95,8 @@ Below is a **short video demo** of an interaction with the chatbot:
 This is a slightly more sophisticated UI, with a theme([YTheme/Minecraft](https://huggingface.co/spaces/YTheme/Minecraft)), and a specialized function: creating a _choose your own adventure_ type experience for the user based on a _Title_ that the user picks for their adventure. This required us to use an initial **system prompt** to tell the fine-tuned LLM what its purpose was. 
 
 Below is a **short video demo** of an adventure created by the storymaker: 
-**TODO: ADD VIDEO**
+
+https://github.com/user-attachments/assets/2cbb0026-951c-4ec8-ae3e-0eb79eea85a0
 
 **The Code**: https://huggingface.co/spaces/rishivijayvargiya/id2223-lab2-storymaker/tree/main
 
