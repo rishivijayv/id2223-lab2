@@ -103,7 +103,7 @@ Below is a **short video demo** of an adventure created by the storymaker:
 
 https://github.com/user-attachments/assets/2cbb0026-951c-4ec8-ae3e-0eb79eea85a0
 
-_Note: See note above about the UI, and unfortunately the cool theme in the video above is not visible anymore. We also slightly changed the **system prompt** after the video above was recorded, but we don't feel that has any significant impact on the outcome._
+_Note: See note above about the UI, and unfortunately the cool theme in the video above is not visible anymore (likely because of the same issue). We also slightly changed the **system prompt** after the video above was recorded, but we don't feel that has any significant impact on the outcome. The video below was recorded after the system-prompt update._
 
 
 https://github.com/user-attachments/assets/1872999d-bb32-4f20-a0f6-e13c1df84ff2
